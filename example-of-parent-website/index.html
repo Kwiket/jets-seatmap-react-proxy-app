@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="style/main.css" />
+    <script src="js/constants.js"></script>
+  </head>
+  <body>
+    <div class="row">
+      <div class="col left">
+        <div class="block" data-key="config">
+          <textarea class="textarea"> </textarea>
+          <button class="button jets-js-button">1. config</button>
+        </div>
+        <div class="block" data-key="flight">
+          <textarea class="textarea"> </textarea>
+          <button class="button jets-js-button">2. flight</button>
+        </div>
+        <div class="block" data-key="availability">
+          <textarea class="textarea"> </textarea>
+          <button class="button jets-js-button">3. availability</button>
+        </div>
+        <div class="block" data-key="passengers">
+          <textarea class="textarea"> </textarea>
+          <button class="button jets-js-button">4. passengers</button>
+        </div>
+        <div class="block" data-key="currentDeckIndex">
+          <textarea class="textarea">0</textarea>
+          <button class="button jets-js-button">5. deck</button>
+        </div>
+      </div>
+      <div class="col right">
+        <!-- TODO: replace value of iframe src attribute with correct address of CHILD proxy app -->
+        <iframe id="seatmaps-iframe" src="http://localhost:3000/" frameborder="0"></iframe>
+      </div>
+    </div>
+
+    <script>
+      const buttons = document.querySelectorAll('.jets-js-button');
+      buttons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const wrap = btn.closest('.block');
+          const data = wrap.querySelector('textarea').value;
+          const key = wrap.dataset.key;
+
+          const iframe = document.querySelector('#seatmaps-iframe');
+          const url = iframe.src;
+          const message = { type: 'seatMaps', [key]: data };
+
+          if (iframe && iframe.contentWindow) {
+            iframe.contentWindow.postMessage(message, url);
+          }
+        });
+      });
+
+      Object.keys(INIT_DATA).forEach(key => {
+        const textarea = document.querySelector(`[data-key="${key}"] textarea`);
+        if (textarea) {
+          textarea.value = JSON.stringify(INIT_DATA[key], null, 2);
+        }
+      });
+
+      const appMessageListener = event => {
+        const { type, ...rest } = event.data;
+
+        if (type == 'seatMaps') {
+          console.log(`message from react lib:`, event.data);
+        }
+      };
+
+      window.addEventListener('message', appMessageListener);
+    </script>
+  </body>
+</html>
