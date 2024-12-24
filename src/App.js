@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-import { JetsSeatMap } from 'jets-seatmap-react-lib';
+import { JetsSeatMap } from '@seatmaps.com/react-lib';
 import { MessageService } from './common/message-service';
 import { MESSAGE_TYPES, CONFIG_DATA } from './common/constants';
 
