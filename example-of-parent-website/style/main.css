@@ -64,3 +64,7 @@ iframe {
   text-transform: uppercase;
   background-color: #4071b9;
 }
+
+a {
+  font-family: 'Montserrat', monospace;
+}
