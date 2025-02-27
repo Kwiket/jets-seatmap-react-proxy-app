@@ -9,12 +9,12 @@
   </head>
   <body>
     <div class="row">
-      <div class="col left">
+      <button id="btn-hide" class="button">HIDE PARAMS</button>
+    </div>
+    <div class="row">
+      <div id="left-column" class="col left">
         <div class="block">
-          <a
-            href="https://github.com/Kwiket/jets-seatmap-react-lib-pub/blob/version-3/SEATMAP-INTEGRATION.md"
-            target="_blank"
-          >
+          <a href="https://github.com/Kwiket/jets-seatmap-react-lib-pub/blob/version-3/README.md" target="_blank">
             REACT LIB SEATMAP INTEGRATION DOCUMENTATION
           </a>
         </div>
@@ -39,13 +39,35 @@
           <button class="button jets-js-button">5. deck</button>
         </div>
       </div>
-      <div class="col right">
+      <div id="right-column" class="col right">
         <!-- TODO: replace value of iframe src attribute with correct address of CHILD proxy app -->
+        <!-- <iframe id="seatmaps-iframe" src="http://localhost:3000/" frameborder="0"></iframe> -->
         <iframe id="seatmaps-iframe" src="https://quicket.io/react-proxy-app/" frameborder="0"></iframe>
       </div>
     </div>
 
     <script>
+      const buttonHide = document.getElementById('btn-hide');
+      buttonHide.addEventListener('click', () => {
+        const leftColumn = document.getElementById('left-column');
+        const rightColumn = document.getElementById('right-column');
+        if (leftColumn.classList.contains('left-folded')) {
+          leftColumn.classList.remove('left-folded');
+          leftColumn.classList.add('left');
+
+          rightColumn.classList.remove('right-expanded');
+          rightColumn.classList.add('right');
+          buttonHide.textContent = 'HIDE PARAMS';
+        } else {
+          leftColumn.classList.remove('left');
+          leftColumn.classList.add('left-folded');
+
+          rightColumn.classList.remove('right');
+          rightColumn.classList.add('right-expanded');
+          buttonHide.textContent = 'SHOW PARAMS';
+        }
+      });
+
       const buttons = document.querySelectorAll('.jets-js-button');
       buttons.forEach(btn => {
         btn.addEventListener('click', () => {
@@ -77,7 +99,6 @@
           console.log(`message from react lib:`, event.data);
         }
       };
-
       window.addEventListener('message', appMessageListener);
     </script>
   </body>

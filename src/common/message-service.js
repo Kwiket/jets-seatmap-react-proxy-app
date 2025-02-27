@@ -32,6 +32,8 @@ export class MessageService {
    * @param {MessageEvent} event - The message event object
    */
   processIncomingMessage(event) {
+    console.log('Message received:', event.data);
+
     const { type, ...rest } = event.data;
 
     if (type !== MESSAGE_TYPES.SEAT_MAP) return;
@@ -88,6 +90,8 @@ export class MessageService {
 
     if (window.parent !== window) {
       window.parent.postMessage(message, process.env.REACT_APP_HOST_APP_URL);
+    } else if (window.opener !== window) {
+      window.opener.postMessage(message, process.env.REACT_APP_HOST_APP_URL);
     } else {
       console.error('No parent window detected. The application is not running inside an iframe.');
     }
