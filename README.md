@@ -109,11 +109,11 @@ The data is stored in the `data` state, which contains an object with all the pa
 ```
 npm run build
 
-docker build -t jets-seatmap-react-proxy-app:20241224 --no-cache .
+docker build -t jets-seatmap-react-proxy-app:20250703 --no-cache .
 
-docker tag jets-seatmap-react-proxy-app:20241224 docker-registry.kwiket.com/jets-seatmap-react-proxy-app:20241224
-docker tag jets-seatmap-react-proxy-app:20241224 docker-registry.kwiket.com/jets-seatmap-react-proxy-app:latest
-docker push docker-registry.kwiket.com/jets-seatmap-react-proxy-app:20241224
+docker tag jets-seatmap-react-proxy-app:20250703 docker-registry.kwiket.com/jets-seatmap-react-proxy-app:20250703
+docker tag jets-seatmap-react-proxy-app:20250703 docker-registry.kwiket.com/jets-seatmap-react-proxy-app:latest
+docker push docker-registry.kwiket.com/jets-seatmap-react-proxy-app:20250703
 docker push docker-registry.kwiket.com/jets-seatmap-react-proxy-app:latest
 
 curl -X POST https://cluster.kwiket.com/api/webhooks/fe936ec0-aa6a-4da1-8f6c-2766f20cbdc0
