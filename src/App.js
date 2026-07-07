@@ -11,10 +11,10 @@ function App() {
   const onDataUpdated = (newData, errorStatus) => {
     if (newData.config) {
       newData.config = {
-        ...newData.config,
         apiUrl: process.env.REACT_APP_JETS_BASE_API_URL,
         apiAppId: process.env.REACT_APP_JETS_APP_ID,
         apiKey: process.env.REACT_APP_JETS_PRIVATE_KEY,
+        ...newData.config,
       };
     }
 
