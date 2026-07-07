@@ -39,17 +39,14 @@ validation errors.
 ### Component `App` (`App.js`)
 
 1. **State**
-
    - `data` (object): Stores processed data from incoming messages.
    - `isError` (boolean): Indicates whether an error occurred during data processing.
 
 2. **Methods**
-
    - `onDataUpdated(newData, errorStatus)`: Updates the state with new data and the error status provided by the
      `MessageService`.
 
 3. **Effects**
-
    - Initializes an instance of `MessageService` to listen for incoming messages.
    - Cleans up message listeners when the component is unmounted.
 
@@ -63,23 +60,19 @@ The `MessageService` class is responsible for managing the flow of data from inc
 #### Key Methods
 
 1. **`cleanAndParse(value)`**
-
    - Cleans and converts raw data into a JSON object.
    - Fixes invalid or non-standard formatting.
    - Returns `null` if the processing fails.
 
 2. **`processIncomingMessage(event)`**
-
    - Processes only messages with the type `MESSAGE_TYPES.SEAT_MAP`.
    - Iterates over each data field, cleans, and parses them.
    - Passes the updated data to the application via `onDataUpdated`.
 
 3. **`startListening()`**
-
    - Adds a `message` event listener to the `window` object.
 
 4. **`stopListening()`**
-
    - Removes the `message` event listener.
 
 ## Structure of Processed Data
@@ -109,13 +102,20 @@ The data is stored in the `data` state, which contains an object with all the pa
 ```
 npm run build
 
-docker build -t jets-seatmap-react-proxy-app:20250703 --no-cache .
+docker build -t jets-seatmap-react-proxy-app:latest --no-cache .
+```
 
-docker tag jets-seatmap-react-proxy-app:20250703 docker-registry.kwiket.com/jets-seatmap-react-proxy-app:20250703
-docker tag jets-seatmap-react-proxy-app:20250703 docker-registry.kwiket.com/jets-seatmap-react-proxy-app:latest
-docker push docker-registry.kwiket.com/jets-seatmap-react-proxy-app:20250703
-docker push docker-registry.kwiket.com/jets-seatmap-react-proxy-app:latest
-
-curl -X POST https://cluster.kwiket.com/api/webhooks/fe936ec0-aa6a-4da1-8f6c-2766f20cbdc0
+## Docker run
 
 ```
+docker run -d --name jets-seatmap-react-proxy-app -p 8080:80 jets-seatmap-react-proxy-app:latest
+```
+
+The app will be available at [http://localhost:8080/react-proxy-app](http://localhost:8080/react-proxy-app).
+
+docker tag jets-seatmap-react-proxy-app:latest docker-registry.kwiket.com/jets-seatmap-react-proxy-app:20260707 docker
+tag jets-seatmap-react-proxy-app:latest docker-registry.kwiket.com/jets-seatmap-react-proxy-app:latest docker push
+docker-registry.kwiket.com/jets-seatmap-react-proxy-app:20260707 docker push
+docker-registry.kwiket.com/jets-seatmap-react-proxy-app:latest
+
+curl -X POST https://cluster.kwiket.com/api/webhooks/fe936ec0-aa6a-4da1-8f6c-2766f20cbdc0
