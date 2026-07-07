@@ -6,7 +6,7 @@ export const FLIGHT_DATA = {
   id: '111',
   airlineCode: 'EK',
   flightNo: '50',
-  departureDate: '2025-03-21',
+  departureDate: '2026-12-21',
   departure: 'MUC',
   arrival: 'DXB',
   cabinClass: 'A',

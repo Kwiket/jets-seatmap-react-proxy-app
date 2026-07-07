@@ -6,7 +6,7 @@ const FLIGHT_DATA = {
   id: '111',
   airlineCode: 'EK',
   flightNo: '50',
-  departureDate: '2025-03-21',
+  departureDate: '2026-12-21',
   departure: 'MUC',
   arrival: 'DXB',
   cabinClass: 'A',
@@ -161,8 +161,7 @@ const CONFIG_DATA = {
     fuselageStrokeColor: 'darkgrey',
     fuselageWindowsColor: 'darkgrey',
     fuselageWingsColor: 'rgba(55, 55, 55, 0.5)',
-    exitIconUrlLeft: 'https://panorama.quicket.io/icons/exit-left.svg',
-    exitIconUrlRight: 'https://panorama.quicket.io/icons/exit-right.svg',
+    fuselageNoseType: 'by-type',
   },
 };
 
