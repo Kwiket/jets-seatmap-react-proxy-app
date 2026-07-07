@@ -112,10 +112,3 @@ docker run -d --name jets-seatmap-react-proxy-app -p 8080:80 jets-seatmap-react-
 ```
 
 The app will be available at [http://localhost:8080/react-proxy-app](http://localhost:8080/react-proxy-app).
-
-docker tag jets-seatmap-react-proxy-app:latest docker-registry.kwiket.com/jets-seatmap-react-proxy-app:20260707 docker
-tag jets-seatmap-react-proxy-app:latest docker-registry.kwiket.com/jets-seatmap-react-proxy-app:latest docker push
-docker-registry.kwiket.com/jets-seatmap-react-proxy-app:20260707 docker push
-docker-registry.kwiket.com/jets-seatmap-react-proxy-app:latest
-
-curl -X POST https://cluster.kwiket.com/api/webhooks/fe936ec0-aa6a-4da1-8f6c-2766f20cbdc0
