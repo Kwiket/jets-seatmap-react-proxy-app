@@ -2,118 +2,6 @@ export const MESSAGE_TYPES = {
   SEAT_MAP: 'seatMaps',
 };
 
-export const FLIGHT_DATA = {
-  id: '111',
-  airlineCode: 'EK',
-  flightNo: '50',
-  departureDate: '2026-12-21',
-  departure: 'MUC',
-  arrival: 'DXB',
-  cabinClass: 'A',
-};
-
-export const AVAILABILITY_DATA = [
-  {
-    currency: 'USD',
-    label: '20A',
-    price: 33,
-    onlyForPassengerType: ['ADT', 'CHD', 'INF'],
-    additionalProps: [
-      {
-        label: 'Test prop for all',
-        icon: null,
-      },
-      {
-        label: 'Another test prop for all',
-        icon: 'wifi',
-      },
-    ],
-    color: 'green',
-  },
-  {
-    currency: 'USD',
-    label: '20E',
-    price: 33,
-    onlyForPassengerType: ['ADT', 'CHD', 'INF'],
-    additionalProps: [
-      {
-        label: 'Clear air',
-        icon: null,
-      },
-      {
-        label: 'USB plug',
-        icon: 'power',
-      },
-    ],
-    color: 'red',
-  },
-  {
-    currency: 'USD',
-    label: '20K',
-    price: 33,
-    onlyForPassengerType: ['ADT', 'CHD', 'INF'],
-    color: 'magenta',
-  },
-  {
-    currency: 'USD',
-    label: '21F',
-    price: 13,
-    onlyForPassengerType: ['ADT', 'CHD', 'INF'],
-  },
-  {
-    currency: 'USD',
-    label: '21J',
-    price: 13,
-    onlyForPassengerType: ['CHD', 'INF'],
-  },
-  {
-    currency: 'USD',
-    label: '35K',
-    price: 1337,
-    onlyForPassengerType: ['CHD', 'INF'],
-  },
-  {
-    currency: 'EUR',
-    label: '70E',
-    price: 1488,
-  },
-];
-
-export const PASSANGERS_DATA = [
-  {
-    passengerType: 'ADT',
-    id: '1',
-    seat: null,
-  },
-  {
-    id: '2',
-    seat: {
-      price: 0,
-      seatLabel: '21F',
-    },
-    passengerLabel: 'Alex Test',
-    passengerColor: 'brown',
-  },
-  {
-    id: '4',
-    seat: {
-      price: 0,
-      seatLabel: '21J',
-    },
-    passengerLabel: 'Big Lebowski',
-    passengerColor: 'green',
-  },
-  {
-    id: '3',
-    passengerType: 'CHD',
-    seat: null,
-    passengerLabel: 'John Snow',
-    passengerColor: 'orange',
-  },
-];
-
-export const DECK_DATA = 0;
-
 export const CONFIG_DATA = {
   width: 400,
   lang: 'EN',
@@ -164,7 +52,6 @@ export const CONFIG_DATA = {
     fuselageStrokeColor: 'darkgrey',
     fuselageWindowsColor: 'darkgrey',
     fuselageWingsColor: 'rgba(55, 55, 55, 0.5)',
-    exitIconUrlLeft: 'https://panorama.quicket.io/icons/exit-left.svg',
-    exitIconUrlRight: 'https://panorama.quicket.io/icons/exit-right.svg',
+    fuselageNoseType: 'by-type',
   },
 };

@@ -1,3 +1,6 @@
+// Sample payloads sent to the proxy app. CONFIG_DATA mirrors the app defaults in src/common/constants.js
+// (minus the credentials, which come from the app's env); keep both in sync.
+
 const MESSAGE_TYPES = {
   SEAT_MAP: 'seatMaps',
 };
