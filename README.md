@@ -1,114 +1,114 @@
-# App Documentation
+# Jets Seat Map Proxy App
 
-## Available Commands:
+A React app that renders the
+[Jets seat map](https://github.com/Kwiket/jets-seatmap-react-lib-pub/blob/version-3/README.md) inside an iframe, so any
+web page can embed a seat map without using React. The host page sends the seat map data with `postMessage`; the app
+renders the seat map and posts its events back.
 
-### Install Dependencies
+## Requirements
 
-`npm i`
+Node.js 22.22+ or 24.15+.
 
-### Run the Application
+## Commands
 
-`npm start` - The application will be available at [http://localhost:3000](http://localhost:3000)
+| Command           | Description                                         |
+| ----------------- | --------------------------------------------------- |
+| `npm ci`          | Install dependencies                                |
+| `npm start`       | Start the dev server at http://localhost:3000       |
+| `npm run build`   | Build for production into `./build`                 |
+| `npm run preview` | Serve the production build locally                  |
+| `npm test`        | Run the tests once (`npm run test:watch` to watch)  |
+| `npm run lint`    | Lint with ESLint                                    |
+| `npm run format`  | Format with Prettier (`npm run format:check` in CI) |
 
-### Build the Application
+## Configuration
 
-`npm run build` - The built version of the app will be located in the `./build` directory.
+Copy `.env-sample` to `.env.local` and fill it in. The values are read at build time.
 
-## General Description of the Application
+| Variable                      | Description                                                      |
+| ----------------------------- | ---------------------------------------------------------------- |
+| `REACT_APP_JETS_BASE_API_URL` | Jets API base URL                                                |
+| `REACT_APP_JETS_APP_ID`       | Jets API app ID, used unless the host sends `config.apiAppId`    |
+| `REACT_APP_JETS_PRIVATE_KEY`  | Jets API key, used unless the host sends `config.apiKey`         |
+| `REACT_APP_HOST_APP_URL`      | Host page origin; seat map events are only posted to this origin |
 
-This React application is designed to display an airplane seat map using the `JetsSeatMap` library. It receives data via
-messages from an external source (e.g., a parent window), dynamically updates the application's state, and handles data
-validation errors.
+All values are embedded in the built JavaScript and can be read by anyone who loads the app.
 
-## File Structure
+## Host page integration
 
-- **`App.js`**  
-  Contains the core application logic and integration with the `JetsSeatMap` component.
+[`example-of-parent-website/`](example-of-parent-website/) is a working host page for manual testing. Point its iframe
+`src` at your app URL.
 
-- **`src/common/message-service.js`**  
-  Implements the `MessageService` class for handling incoming messages and updating data.
+### Sending data to the seat map
 
-- **`src/common/constants.js`**  
-  Contains constants for message types used in the application (not shown in the example but assumed to be present).
+Post a message to the iframe with `type: 'seatMaps'` and any of the fields below. Each field is a JSON string or an
+already structured value; relaxed JS-like strings (unquoted keys, single quotes, trailing commas) are accepted too.
+Fields are merged into the current state, so they can be sent separately.
 
-- **`./example-of-parent-website`**  
-  Provides a static example page demonstrating how to use this application within an iframe.
+| Field              | Description                                                                                      |
+| ------------------ | ------------------------------------------------------------------------------------------------ |
+| `config`           | Seat map config, layered over the defaults in `src/common/constants.js` (`colorTheme` per color) |
+| `flight`           | Flight to show                                                                                   |
+| `availability`     | Seat availability and prices                                                                     |
+| `passengers`       | Passengers and their seats                                                                       |
+| `currentDeckIndex` | Deck to show, `0` by default                                                                     |
 
-## Application Logic
-
-### Component `App` (`App.js`)
-
-1. **State**
-   - `data` (object): Stores processed data from incoming messages.
-   - `isError` (boolean): Indicates whether an error occurred during data processing.
-
-2. **Methods**
-   - `onDataUpdated(newData, errorStatus)`: Updates the state with new data and the error status provided by the
-     `MessageService`.
-
-3. **Effects**
-   - Initializes an instance of `MessageService` to listen for incoming messages.
-   - Cleans up message listeners when the component is unmounted.
-
-4. **Rendering Logic**
-   - Displays an error message if `isError` is `true`.
-
-### Message Service (`message-service.js`)
-
-The `MessageService` class is responsible for managing the flow of data from incoming messages to the React application.
-
-#### Key Methods
-
-1. **`cleanAndParse(value)`**
-   - Cleans and converts raw data into a JSON object.
-   - Fixes invalid or non-standard formatting.
-   - Returns `null` if the processing fails.
-
-2. **`processIncomingMessage(event)`**
-   - Processes only messages with the type `MESSAGE_TYPES.SEAT_MAP`.
-   - Iterates over each data field, cleans, and parses them.
-   - Passes the updated data to the application via `onDataUpdated`.
-
-3. **`startListening()`**
-   - Adds a `message` event listener to the `window` object.
-
-4. **`stopListening()`**
-   - Removes the `message` event listener.
-
-## Structure of Processed Data
-
-The data is stored in the `data` state, which contains an object with all the parsed information. An example structure:
+The [seat map library documentation](https://github.com/Kwiket/jets-seatmap-react-lib-pub/blob/version-3/README.md)
+describes each field. If a field cannot be parsed, the app shows "Please, set correct data" until a message with valid
+fields arrives.
 
 ```javascript
-{
-   flight: {
-      id: '111',
-      airlineCode: 'EK',
-      flightNo: '50',
-      // ...
-   },
-   availability: [],
-   passengers: [],
-   config: {
-      width: 400,
-      lang: 'EN',
-      // ...
-   }
-}
+iframe.contentWindow.postMessage(
+  { type: 'seatMaps', flight: JSON.stringify(flight), passengers: JSON.stringify(passengers) },
+  'https://quicket.io/react-proxy-app/'
+);
 ```
 
-## Docker build
+### Receiving seat map events
+
+The app posts `{ type: 'seatMaps', <eventName>: <JSON string> }` to its parent window, or to its opener when it is not
+framed.
+
+| Event                | Payload                                                                  |
+| -------------------- | ------------------------------------------------------------------------ |
+| `onSeatMapInited`    | Initial layout: decks, size, available seats, media                      |
+| `onLayoutUpdated`    | Layout after a deck switch                                               |
+| `onSeatSelected`     | Passengers with their seats                                              |
+| `onSeatUnselected`   | Passengers with their seats                                              |
+| `onTooltipRequested` | Seat data only; the library's DOM element and event cannot be serialized |
+
+```javascript
+window.addEventListener('message', event => {
+  if (event.origin !== 'https://quicket.io' || event.data?.type !== 'seatMaps') return;
+
+  if (event.data.onSeatSelected) {
+    const passengers = JSON.parse(event.data.onSeatSelected);
+    // ...
+  }
+});
+```
+
+## Project structure
+
+- [`src/App.jsx`](src/App.jsx): renders `JetsSeatMap` with the host data and forwards its events.
+- [`src/common/message-service.js`](src/common/message-service.js): receives, parses and sends `postMessage` messages.
+- [`src/common/seat-map-config.js`](src/common/seat-map-config.js): builds the seat map config from the host config and
+  the defaults.
+- [`src/common/constants.js`](src/common/constants.js): message type and default config.
+
+## Docker
+
+The env file is mounted for the build step only, so it is not stored in the image:
 
 ```
-npm run build
-
-docker build -t jets-seatmap-react-proxy-app:latest --no-cache .
+docker build --no-cache --secret id=env,src=.env.local -t jets-seatmap-react-proxy-app:latest .
 ```
 
-## Docker run
+Keep `--no-cache`: Docker does not include the env file in its build cache key, so a cached build would reuse the
+previous values.
 
 ```
 docker run -d --name jets-seatmap-react-proxy-app -p 8080:80 jets-seatmap-react-proxy-app:latest
 ```
 
-The app will be available at [http://localhost:8080/react-proxy-app](http://localhost:8080/react-proxy-app).
+The app is available at [http://localhost:8080/react-proxy-app/](http://localhost:8080/react-proxy-app/).

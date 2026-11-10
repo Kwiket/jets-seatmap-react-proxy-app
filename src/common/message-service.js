@@ -112,6 +112,6 @@ export class MessageService {
       return;
     }
 
-    hostWindow.postMessage(message, process.env.REACT_APP_HOST_APP_URL);
+    hostWindow.postMessage(message, import.meta.env.REACT_APP_HOST_APP_URL);
   }
 }

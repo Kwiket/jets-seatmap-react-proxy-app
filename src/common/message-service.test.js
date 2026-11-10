@@ -1,16 +1,13 @@
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { MessageService } from './message-service';
 
 const HOST_URL = 'https://host.example';
-
-afterEach(() => {
-  jest.restoreAllMocks();
-});
 
 describe('MessageService.cleanAndParse', () => {
   const service = new MessageService({});
 
   beforeEach(() => {
-    jest.spyOn(console, 'error').mockImplementation(() => {});
+    vi.spyOn(console, 'error').mockImplementation(() => {});
   });
 
   it.each([
@@ -42,10 +39,10 @@ describe('MessageService.processIncomingMessage', () => {
   let service;
 
   beforeEach(() => {
-    onDataUpdated = jest.fn();
+    onDataUpdated = vi.fn();
     service = new MessageService({ onDataUpdated });
-    jest.spyOn(console, 'log').mockImplementation(() => {});
-    jest.spyOn(console, 'error').mockImplementation(() => {});
+    vi.spyOn(console, 'log').mockImplementation(() => {});
+    vi.spyOn(console, 'error').mockImplementation(() => {});
   });
 
   it('ignores messages without data', () => {
@@ -74,23 +71,21 @@ describe('MessageService.processIncomingMessage', () => {
 });
 
 describe('MessageService.sendMessage', () => {
-  const originalHostUrl = process.env.REACT_APP_HOST_APP_URL;
   let service;
 
   beforeEach(() => {
-    process.env.REACT_APP_HOST_APP_URL = HOST_URL;
+    vi.stubEnv('REACT_APP_HOST_APP_URL', HOST_URL);
     service = new MessageService({});
-    jest.spyOn(console, 'error').mockImplementation(() => {});
+    vi.spyOn(console, 'error').mockImplementation(() => {});
   });
 
   afterEach(() => {
-    process.env.REACT_APP_HOST_APP_URL = originalHostUrl;
     window.opener = null;
   });
 
   it('posts stringified fields to the parent frame', () => {
-    const parent = { postMessage: jest.fn() };
-    jest.spyOn(window, 'parent', 'get').mockReturnValue(parent);
+    const parent = { postMessage: vi.fn() };
+    vi.spyOn(window, 'parent', 'get').mockReturnValue(parent);
 
     service.sendMessage('seatMaps', { onSeatSelected: [{ id: '1' }] });
 
@@ -101,7 +96,7 @@ describe('MessageService.sendMessage', () => {
   });
 
   it('posts to the opener when not framed', () => {
-    window.opener = { postMessage: jest.fn() };
+    window.opener = { postMessage: vi.fn() };
 
     service.sendMessage('seatMaps', { onLayoutUpdated: { decksCount: 1 } });
 

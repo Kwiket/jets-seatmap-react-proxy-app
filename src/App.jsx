@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import { JetsSeatMap } from '@seatmaps.com/react-lib';
 import { MessageService } from './common/message-service';

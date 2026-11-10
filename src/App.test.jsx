@@ -1,9 +1,10 @@
 import { act, render, screen } from '@testing-library/react';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { JetsSeatMap } from '@seatmaps.com/react-lib';
 import App from './App';
 
 // The real seat map authenticates and fetches from the Jets API.
-jest.mock('@seatmaps.com/react-lib', () => ({ JetsSeatMap: jest.fn(() => null) }));
+vi.mock('@seatmaps.com/react-lib', () => ({ JetsSeatMap: vi.fn(() => null) }));
 
 const HOST_URL = 'https://host.example';
 
@@ -16,12 +17,8 @@ const sendFromHost = fields => {
 };
 
 beforeEach(() => {
-  jest.spyOn(console, 'log').mockImplementation(() => {});
-  jest.spyOn(console, 'error').mockImplementation(() => {});
-});
-
-afterEach(() => {
-  jest.restoreAllMocks();
+  vi.spyOn(console, 'log').mockImplementation(() => {});
+  vi.spyOn(console, 'error').mockImplementation(() => {});
 });
 
 describe('App receiving host data', () => {
@@ -75,17 +72,12 @@ describe('App receiving host data', () => {
 });
 
 describe('App forwarding seat map events to the host', () => {
-  const originalHostUrl = process.env.REACT_APP_HOST_APP_URL;
   let parent;
 
   beforeEach(() => {
-    process.env.REACT_APP_HOST_APP_URL = HOST_URL;
-    parent = { postMessage: jest.fn() };
-    jest.spyOn(window, 'parent', 'get').mockReturnValue(parent);
-  });
-
-  afterEach(() => {
-    process.env.REACT_APP_HOST_APP_URL = originalHostUrl;
+    vi.stubEnv('REACT_APP_HOST_APP_URL', HOST_URL);
+    parent = { postMessage: vi.fn() };
+    vi.spyOn(window, 'parent', 'get').mockReturnValue(parent);
   });
 
   it.each(['onSeatMapInited', 'onSeatSelected', 'onSeatUnselected', 'onLayoutUpdated'])(

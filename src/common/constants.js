@@ -14,9 +14,9 @@ export const CONFIG_DATA = {
   builtInTooltip: true,
   externalPassengerManagement: false,
   tooltipOnHover: false,
-  apiUrl: process.env.REACT_APP_JETS_BASE_API_URL,
-  apiAppId: process.env.REACT_APP_JETS_APP_ID,
-  apiKey: process.env.REACT_APP_JETS_PRIVATE_KEY,
+  apiUrl: import.meta.env.REACT_APP_JETS_BASE_API_URL,
+  apiAppId: import.meta.env.REACT_APP_JETS_APP_ID,
+  apiKey: import.meta.env.REACT_APP_JETS_PRIVATE_KEY,
   colorTheme: {
     deckLabelTitleColor: 'white',
     deckHeightSpacing: 100,
