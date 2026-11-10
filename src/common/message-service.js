@@ -7,11 +7,28 @@ export class MessageService {
   }
 
   /**
-   * Cleans and parses the value from the message
-   * @param {string} value - The raw string value to be cleaned and parsed
-   * @returns {object} Parsed JSON object or null if error occurs
+   * Parses a message field. Strict JSON is parsed as is; anything else is treated as relaxed,
+   * JS-like input. Values that are not strings were already structured-cloned and pass through.
+   * @param {*} value - The raw field value
+   * @returns {*} Parsed value or null if it cannot be parsed
    */
   cleanAndParse(value) {
+    if (typeof value !== 'string') return value;
+
+    try {
+      return JSON.parse(value);
+    } catch {
+      return this.parseRelaxed(value);
+    }
+  }
+
+  /**
+   * Repairs relaxed, JS-like input (unquoted keys, single quotes, trailing commas) and parses it.
+   * Only used as a fallback: the repairs would corrupt valid JSON strings containing quotes or colons.
+   * @param {string} value - The raw string value
+   * @returns {*} Parsed value or null if it cannot be repaired
+   */
+  parseRelaxed(value) {
     try {
       const cleanedValue = value
         .trim()
@@ -32,11 +49,11 @@ export class MessageService {
    * @param {MessageEvent} event - The message event object
    */
   processIncomingMessage(event) {
+    if (event.data?.type !== MESSAGE_TYPES.SEAT_MAP) return;
+
     console.log('Message received:', event.data);
 
     const { type, ...rest } = event.data;
-
-    if (type !== MESSAGE_TYPES.SEAT_MAP) return;
     const results = {};
     let isError = false;
 
@@ -88,12 +105,13 @@ export class MessageService {
       ...this.prepareMessageData(data),
     };
 
-    if (window.parent !== window) {
-      window.parent.postMessage(message, process.env.REACT_APP_HOST_APP_URL);
-    } else if (window.opener !== window) {
-      window.opener.postMessage(message, process.env.REACT_APP_HOST_APP_URL);
-    } else {
-      console.error('No parent window detected. The application is not running inside an iframe.');
+    const hostWindow = window.parent !== window ? window.parent : window.opener;
+
+    if (!hostWindow) {
+      console.error('No host window detected. The application is neither framed nor opened by another window.');
+      return;
     }
+
+    hostWindow.postMessage(message, process.env.REACT_APP_HOST_APP_URL);
   }
 }
