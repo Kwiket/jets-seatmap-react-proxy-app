@@ -10,8 +10,8 @@ export default defineConfig({
   server: { port: 3000 },
   build: {
     outDir: 'build',
-    // The seat map lib alone is ~420 kB and is needed on load, so splitting it off gains nothing.
-    chunkSizeWarningLimit: 600,
+    // The seat map lib alone is ~520 kB and is needed on load, so splitting it off gains nothing.
+    chunkSizeWarningLimit: 750,
   },
   test: {
     environment: 'jsdom',
